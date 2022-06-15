@@ -1,7 +1,5 @@
 package com.example.bluetooth_hc05;
 
-import static android.os.SystemClock.sleep;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,13 +17,13 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.List;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btn_connect;
-    TextView txt_data, txt_sts;
+    Button btn_connect, btn_addContact, btn_getContact;
+    TextView txt_data, txt_sts, txt_contacts;
 
     BluetoothAdapter bluetoothAdapter;
     BluetoothDevice hc05;
@@ -33,11 +31,14 @@ public class MainActivity extends AppCompatActivity {
 
     SendReceive sendReceive;
 
+    DatabaseHelper databaseHelper;
+
     static final UUID mUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     static final int STATE_CONNECTED = 1;
     static final int STATE_CONNECTION_FAILED = 2;
     static final int STATE_MESSAGE_RECEIVED = 3;
+    static final int STATE_CONTACTS_RECEIVED = 4;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -48,15 +49,57 @@ public class MainActivity extends AppCompatActivity {
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+        databaseHelper = new DatabaseHelper(MainActivity.this);
+
         btn_connect = findViewById(R.id.btn_connect);
         txt_data = findViewById(R.id.txt_data);
         txt_sts = findViewById(R.id.txt_status);
+        btn_addContact = findViewById(R.id.btn_add_contact);
+        btn_getContact = findViewById(R.id.btn_getContact);
+        txt_contacts = findViewById(R.id.txt_contacts);
 
         connect();
+        add();
+        get_contacts();
+    }
+
+    private void get_contacts() {
+        btn_getContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                List<String> allContacts = databaseHelper.getAllContacts();
+
+                String contacts = "Contacts: ";
+                for( String contact : allContacts){
+                    System.out.println(contact);
+                    contacts=contacts.concat(contact);
+                    contacts=contacts.concat(", ");
+                }
+
+                //Toast.makeText(MainActivity.this, contacts, Toast.LENGTH_SHORT).show();
+                handler.obtainMessage(STATE_CONTACTS_RECEIVED, contacts.length(),-1, contacts).sendToTarget();
+
+            }
+        });
+    }
+
+    private void add() {
+        btn_addContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                ContactModel contactModel = new ContactModel(1, "Ravindu2", "+94710764814");
+
+                boolean success = databaseHelper.record_contact(contactModel);
+
+                Toast.makeText(MainActivity.this, ""+success, Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     Handler handler = new Handler(new Handler.Callback() {
-        @SuppressLint("HandlerLeak")
         @Override
         public boolean handleMessage(@NonNull Message msg) {
             switch (msg.what){
@@ -68,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case STATE_MESSAGE_RECEIVED:
                     txt_data.setText((CharSequence) msg.obj);
+                    break;
+                case STATE_CONTACTS_RECEIVED:
+                    txt_contacts.setText((CharSequence) msg.obj);
                     break;
             }
             return false;
@@ -157,20 +203,3 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
-
-//                while (true){
-//
-//                    byte[] buffer = new byte[10];
-//                    int bytes;
-//                    String tmp_string = null;
-//                    try {
-//                        bytes = inputStream.read(buffer);
-//                        tmp_string = new String(buffer,0,bytes);
-//                        System.out.println(tmp_string);
-//                        txt_data.setText(tmp_string);
-//                        Toast.makeText(MainActivity.this, tmp_string, Toast.LENGTH_SHORT).show();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                    sleep(1000);
-//                }
