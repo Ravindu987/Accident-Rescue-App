@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Bluetooth - HC05</string>
+    <string name="menu_drawer_open">Open</string>
+    <string name="menu_drawer_close">Close</string>
 </resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item android:id="@+id/nav_connect" android:title="Connect" android:icon="@drawable/ic_baseline_cast_connected_24"/>
+        <item android:id="@+id/nav_data" android:title="Data" android:icon="@drawable/ic_baseline_grid_on_24"/>
+        <item android:id="@+id/nav_relatives" android:title="Relatives" android:icon="@drawable/ic_baseline_people_24"/>
+        <item android:id="@+id/nav_help" android:title="Help" android:icon="@drawable/ic_baseline_help_center_24"/>
+
+
+    </group>
+
+</menu>
