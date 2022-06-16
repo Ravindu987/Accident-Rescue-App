@@ -15,9 +15,9 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteConstraintException;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,13 +28,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
+import com.example.bluetooth_hc05.layouts.DataViewingWindow;
+import com.example.bluetooth_hc05.layouts.HelpPage;
+import com.example.bluetooth_hc05.layouts.RelativesWindow;
+import com.example.bluetooth_hc05.models.AuthorityModel;
+import com.example.bluetooth_hc05.models.LocationModel;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -208,7 +211,6 @@ public class MainActivity extends AppCompatActivity {
                     txt_sts.setText("Failed");
                     break;
                 case STATE_MESSAGE_RECEIVED:
-                    txt_data.setText((CharSequence) msg.obj);
 
                     //=====================================================
                     String dataString = (String) msg.obj;
@@ -242,10 +244,25 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println(dataString);
                     System.out.println(Arrays.toString(dataArray));
 
-                    String strTime = dataArray[1].substring(0,2)+"."+dataArray[1].substring(2,4);
+                    String hours = dataArray[1].substring(0,2);
+                    String minutes = String.valueOf((Integer.parseInt(dataArray[1].substring(2,4))+30)%60);
+                    if(Integer.parseInt(minutes) < 30){
+                        hours = String.valueOf(Integer.parseInt(hours)+1);
+                    }
+                    hours = String.valueOf((Integer.parseInt(hours)+5)%24);
 
-                    LocationModel locationModel = new LocationModel(strTime, dataArray[2], dataArray[3], "20 ms-1");
-                    //databaseHelper.recordLocation(locationModel);
+                    String strTime = hours+"."+minutes;
+
+                    Float ftTime = Float.valueOf(strTime);
+
+
+                    LocationModel locationModel = new LocationModel(strTime, dataArray[2], dataArray[3], dataArray[4]);
+                    try{
+                        databaseHelper.recordLocation(locationModel);
+                    } catch (SQLiteConstraintException e){
+                        e.printStackTrace();
+                    }
+
 
                     if (dataArray[0].equals("1")){
                         String strMessage = "ACCIDENT DETECTED\n@"+strTime+"\n"+"view the location on google maps:\nhttps://www.google.com/maps/search/?api=1&query="+dataArray[2]+","+dataArray[3];

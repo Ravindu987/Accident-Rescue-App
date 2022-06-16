@@ -1,4 +1,4 @@
-package com.example.bluetooth_hc05;
+package com.example.bluetooth_hc05.layouts;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import com.example.bluetooth_hc05.MainActivity;
+import com.example.bluetooth_hc05.R;
 
 public class HelpPage extends AppCompatActivity {
     Button backButton;

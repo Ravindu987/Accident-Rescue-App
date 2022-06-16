@@ -1,16 +1,16 @@
-package com.example.bluetooth_hc05;
+package com.example.bluetooth_hc05.layouts;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextClock;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.bluetooth_hc05.DatabaseHelper;
+import com.example.bluetooth_hc05.R;
+import com.example.bluetooth_hc05.models.ContactModel;
 
 public class RelativesWindow extends AppCompatActivity {
 

@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HelpPage">
+    tools:context=".layouts.HelpPage">
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:layout_marginTop="96dp"
         android:text=" Help"
         android:textSize="40dp"
         android:textStyle="bold"

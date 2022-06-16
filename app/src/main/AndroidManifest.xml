@@ -15,13 +15,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BluetoothHC05">
         <activity
-            android:name=".HelpPage"
+            android:name=".layouts.HelpPage"
             android:exported="false" />
         <activity
-            android:name=".RelativesWindow"
+            android:name=".layouts.RelativesWindow"
             android:exported="false" />
         <activity
-            android:name=".DataViewingWindow"
+            android:name=".layouts.DataViewingWindow"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

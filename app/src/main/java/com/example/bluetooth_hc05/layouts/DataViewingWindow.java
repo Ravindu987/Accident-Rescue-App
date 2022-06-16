@@ -1,8 +1,10 @@
-package com.example.bluetooth_hc05;
+package com.example.bluetooth_hc05.layouts;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.bluetooth_hc05.R;
 
 public class DataViewingWindow extends AppCompatActivity {
 

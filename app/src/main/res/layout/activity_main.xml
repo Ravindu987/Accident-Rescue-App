@@ -5,6 +5,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_blue"
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +20,7 @@
             android:gravity="center"
             android:text="Welcome\n Accident rescue app"
             android:textSize="24dp"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.6"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -31,7 +33,7 @@
             android:layout_width="114dp"
             android:layout_height="83dp"
             android:layout_marginStart="174dp"
-            android:layout_marginTop="44dp"
+            android:layout_marginTop="92dp"
             android:layout_marginEnd="179dp"
             android:gravity="center"
             android:text="Status"
@@ -46,7 +48,7 @@
             android:layout_width="143dp"
             android:layout_height="70dp"
             android:layout_marginStart="161dp"
-            android:layout_marginTop="228dp"
+            android:layout_marginTop="204dp"
             android:layout_marginEnd="156dp"
             android:backgroundTint="@color/black"
             android:text="Connect"

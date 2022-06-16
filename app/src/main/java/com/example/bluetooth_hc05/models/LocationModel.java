@@ -1,4 +1,4 @@
-package com.example.bluetooth_hc05;
+package com.example.bluetooth_hc05.models;
 
 public class LocationModel {
 

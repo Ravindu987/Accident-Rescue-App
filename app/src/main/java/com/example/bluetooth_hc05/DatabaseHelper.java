@@ -8,6 +8,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.example.bluetooth_hc05.models.AuthorityModel;
+import com.example.bluetooth_hc05.models.ContactModel;
+import com.example.bluetooth_hc05.models.LocationModel;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
