@@ -18,6 +18,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -33,6 +34,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     SendReceive sendReceive;
 
     DatabaseHelper databaseHelper;
+
+    SmsManager smsManagerSend;
 
     static final UUID mUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
@@ -110,25 +114,32 @@ public class MainActivity extends AppCompatActivity {
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+        smsManagerSend = SmsManager.getDefault();
+
         databaseHelper = new DatabaseHelper(MainActivity.this);
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, PackageManager.PERMISSION_GRANTED);
+
+        AuthorityModel colombo = new AuthorityModel(1, "Colombo", "6.868271", "79.9277724", "+94712526577");
+        AuthorityModel kandy = new AuthorityModel(1, "Kandy", "7.288041", "80.632553", "+94770079044");
+        databaseHelper.recordAuthority(colombo);
+        databaseHelper.recordAuthority(kandy);
 
         Intent intent = new Intent(this, RelativesWindow.class);
         intent.putExtra("DatabaseHelper", databaseHelper);
 
         connect();
-        get_contacts();
+        //get_contacts();
     }
 
     private void findViews() {
         drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
         btn_connect = findViewById(R.id.btn_connect);
-        txt_data = findViewById(R.id.txt_data);
+        //txt_data = findViewById(R.id.txt_data);
         txt_sts = findViewById(R.id.txt_status);
-        btn_getContact = findViewById(R.id.btn_getContact);
-        txt_contacts = findViewById(R.id.txt_contacts);
+        //btn_getContact = findViewById(R.id.btn_getContact);
+        //txt_contacts = findViewById(R.id.txt_contacts);
 
     }
 
@@ -147,25 +158,25 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void get_contacts() {
-        btn_getContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                List<String> allContacts = databaseHelper.getAllContacts();
-
-                String contacts = "Contacts: ";
-                for( String contact : allContacts){
-                    System.out.println(contact);
-                    contacts=contacts.concat(contact);
-                    contacts=contacts.concat(", ");
-                }
-
-                Toast.makeText(MainActivity.this, contacts, Toast.LENGTH_SHORT).show();
-                handler.obtainMessage(STATE_CONTACTS_RECEIVED, contacts.length(),-1, contacts).sendToTarget();
-            }
-        });
-    }
+//    private void get_contacts() {
+//        btn_getContact.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                List<String> allContacts = databaseHelper.getAllContacts();
+//
+//                String contacts = "Contacts: ";
+//                for( String contact : allContacts){
+//                    System.out.println(contact);
+//                    contacts=contacts.concat(contact);
+//                    contacts=contacts.concat(", ");
+//                }
+//
+//                Toast.makeText(MainActivity.this, contacts, Toast.LENGTH_SHORT).show();
+//                handler.obtainMessage(STATE_CONTACTS_RECEIVED, contacts.length(),-1, contacts).sendToTarget();
+//            }
+//        });
+//    }
 
     /*
     MESSAGE FORMAT
@@ -203,24 +214,57 @@ public class MainActivity extends AppCompatActivity {
                     String dataString = (String) msg.obj;
                     String dataArray[] = dataString.split(",");
 
+                    String latitude = "";
+                    for(int i=0; i < dataArray[2].length(); i++){
+                        if(i==4){
+                            continue;
+                        }
+                        latitude = latitude.concat(String.valueOf(dataArray[2].charAt(i)));
+                        if(i==1){
+                            latitude = latitude.concat(".");
+                        }
+                    }
+
+                    String longitude = "";
+                    for(int i=0; i < dataArray[3].length(); i++){
+                        if(i==5){
+                            continue;
+                        }
+                        longitude = longitude.concat(String.valueOf(dataArray[3].charAt(i)));
+                        if(i==2){
+                            longitude = longitude.concat(".");
+                        }
+                    }
+
+                    dataArray[2] = latitude;
+                    dataArray[3] = longitude;
+
                     System.out.println(dataString);
                     System.out.println(Arrays.toString(dataArray));
 
-//                    storeData(dataArray);    // to be implemented to store data in a database.
-
                     String strTime = dataArray[1].substring(0,2)+"."+dataArray[1].substring(2,4);
 
-//                    String version = "2.0";
+                    LocationModel locationModel = new LocationModel(strTime, dataArray[2], dataArray[3], "20 ms-1");
+                    //databaseHelper.recordLocation(locationModel);
 
                     if (dataArray[0].equals("1")){
-                        SmsManager smsManagerSend = SmsManager.getDefault();
                         String strMessage = "ACCIDENT DETECTED\n@"+strTime+"\n"+"view the location on google maps:\nhttps://www.google.com/maps/search/?api=1&query="+dataArray[2]+","+dataArray[3];
                         System.out.println(strMessage);         // testing
+
+                        List<AuthorityModel> allAuthorities = databaseHelper.getAllAuthorities();
+                        Location curLocation = new Location("");
+                        curLocation.setLatitude(Double.parseDouble(dataArray[2]));
+                        curLocation.setLongitude(Double.parseDouble(dataArray[3]));
+
+                        AuthorityModel nearestAuthority = getNearestLocation(allAuthorities, curLocation);
+                        System.out.println(nearestAuthority.getName());
+                        smsManagerSend.sendTextMessage(nearestAuthority.getContact(), null, strMessage, null, null);
 
                         List<String> allContacts = databaseHelper.getAllContacts();
 
                         for (String contact: allContacts) {
-                            smsManagerSend.sendTextMessage(contact, null, strMessage, null, null);
+                            System.out.println(contact);
+                            //smsManagerSend.sendTextMessage(contact, null, strMessage, null, null);
                         }
                     }
 
@@ -251,6 +295,28 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private AuthorityModel getNearestLocation( List<AuthorityModel> locations, Location curLocation){
+
+        AuthorityModel nearestLocation = null;
+        float distance = 999999.0F;
+        
+        for( AuthorityModel location : locations){
+            double lat = Double.parseDouble(location.getLat());
+            double lang = Double.parseDouble(location.getLang());
+            Location authority_location = new Location("");
+            authority_location.setLatitude(lat);
+            authority_location.setLongitude(lang);
+
+            if( authority_location.distanceTo(curLocation) < distance){
+                distance = authority_location.distanceTo(curLocation);
+                System.out.println("Distance: ######" + distance);
+                nearestLocation = location;
+            }
+        }
+
+        return nearestLocation;
     }
 
     @SuppressLint("MissingPermission")

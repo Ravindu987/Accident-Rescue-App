@@ -4,7 +4,7 @@ public class LocationModel {
 
     String time, longitude, latitude,velocity;
 
-    public LocationModel(String time, String longitude, String latitude, String velocity) {
+    public LocationModel(String time, String latitude, String longitude, String velocity) {
         this.time = time;
         this.longitude = longitude;
         this.latitude = latitude;
