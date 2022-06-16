@@ -8,14 +8,20 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper implements Serializable {
     public static final String COLUMN_CONTACT_ID = "ID";
     public static final String COLUMN_CONTACT_NAME = "NAME";
     public static final String COLUMN_CONTACT = "CONTACT";
     public static final String EMERGENCY_CONTACTS = "EMERGENCY_CONTACTS";
+    public static final String LOCATION_TABLE = "LOCATION_TABLE";
+    public static final String COLUMN_TIME = "TIME";
+    public static final String COLUMN_LONGITUDE = "LONGITUDE";
+    public static final String COLUMN_LATITUDE = "LATITUDE";
+    public static final String COLUMN_VELOCITY = "VELOCITY";
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, "accident_rescue.db", null, 1);
@@ -25,6 +31,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String createContactTable = "CREATE TABLE " + EMERGENCY_CONTACTS + " ( " + COLUMN_CONTACT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + COLUMN_CONTACT_NAME + " VARCHAR(20) NOT NULL, " + COLUMN_CONTACT + " CHAR(12) NOT NULL)";
         sqLiteDatabase.execSQL(createContactTable);
+        String createLocationTable = "CREATE TABLE " + LOCATION_TABLE + " ( " + COLUMN_TIME + " VARCHAR(10) PRIMARY KEY NOT NULL, " + COLUMN_LONGITUDE + " VARCHAR(10) NOT NULL, " + COLUMN_LATITUDE + " VARCHAR(10) NOT NULL, " + COLUMN_VELOCITY + " VARCHAR(10) NOT NULL)";
+        sqLiteDatabase.execSQL(createLocationTable);
     }
 
     @Override
@@ -70,5 +78,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         //db.close();
         return allContacts;
+    }
+
+    public boolean recordLocation(LocationModel locationModel){
+
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_TIME, locationModel.getTime());
+        cv.put(COLUMN_LONGITUDE, locationModel.getLongitude());
+        cv.put(COLUMN_LATITUDE, locationModel.getLatitude());
+        cv.put(COLUMN_VELOCITY, locationModel.getVelocity());
+
+        long insert = db.insert(LOCATION_TABLE, null, cv);
+        if(insert==-1){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 }

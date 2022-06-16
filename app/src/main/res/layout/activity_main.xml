@@ -13,25 +13,31 @@
 
         <TextView
             android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!"
+            android:layout_width="416dp"
+            android:layout_height="166dp"
+            android:background="@color/green"
+            android:gravity="center"
+            android:text="Welcome to the accident rescue app!"
+            android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.6"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.119" />
+            app:layout_constraintVertical_bias="0.004" />
 
         <TextView
             android:id="@+id/txt_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="114dp"
+            android:layout_height="83dp"
             android:layout_marginStart="174dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="44dp"
             android:layout_marginEnd="179dp"
+            android:gravity="center"
             android:text="Status"
+            android:textSize="18dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.611"
+            app:layout_constraintHorizontal_bias="0.464"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
@@ -40,8 +46,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="161dp"
-            android:layout_marginTop="68dp"
+            android:layout_marginTop="48dp"
             android:layout_marginEnd="156dp"
+            android:backgroundTint="@color/black"
             android:text="Connect"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.727"
@@ -53,42 +60,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="191dp"
-            android:layout_marginTop="124dp"
+            android:layout_marginTop="64dp"
             android:layout_marginEnd="191dp"
             android:text="Data"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_connect" />
-
-        <Button
-            android:id="@+id/btn_add_contact"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="59dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="174dp"
-            android:text="ADD"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_data"
-            app:layout_constraintVertical_bias="0.205" />
 
         <Button
             android:id="@+id/btn_getContact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="95dp"
-            android:layout_marginTop="183dp"
+            android:layout_marginStart="144dp"
+            android:layout_marginTop="132dp"
             android:text="Get Contacts"
-            app:layout_constraintStart_toEndOf="@+id/btn_add_contact"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_connect" />
 
         <TextView
             android:id="@+id/txt_contacts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="122dp"
+            android:layout_marginStart="176dp"
+            android:layout_marginTop="128dp"
             android:text="Contacts"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_data" />

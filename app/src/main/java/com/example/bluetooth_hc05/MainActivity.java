@@ -1,17 +1,23 @@
 package com.example.bluetooth_hc05;
 
+import static java.lang.Thread.sleep;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,6 +38,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final int REQUEST_ENABLE_BIT=0;
+
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ActionBarDrawerToggle actionBarDrawerToggle;
@@ -63,12 +72,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        drawerLayout = findViewById(R.id.drawerLayout);
-        navigationView = findViewById(R.id.navigationView);
+        findViews();
+
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.menu_drawer_open, R.string.menu_drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -102,16 +112,24 @@ public class MainActivity extends AppCompatActivity {
 
         databaseHelper = new DatabaseHelper(MainActivity.this);
 
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, PackageManager.PERMISSION_GRANTED);
+
+        Intent intent = new Intent(this, RelativesWindow.class);
+        intent.putExtra("DatabaseHelper", databaseHelper);
+
+        connect();
+        get_contacts();
+    }
+
+    private void findViews() {
+        drawerLayout = findViewById(R.id.drawerLayout);
+        navigationView = findViewById(R.id.navigationView);
         btn_connect = findViewById(R.id.btn_connect);
         txt_data = findViewById(R.id.txt_data);
         txt_sts = findViewById(R.id.txt_status);
-        btn_addContact = findViewById(R.id.btn_add_contact);
         btn_getContact = findViewById(R.id.btn_getContact);
         txt_contacts = findViewById(R.id.txt_contacts);
 
-        connect();
-        add();
-        get_contacts();
     }
 
 
@@ -143,35 +161,18 @@ public class MainActivity extends AppCompatActivity {
                     contacts=contacts.concat(", ");
                 }
 
-                //Toast.makeText(MainActivity.this, contacts, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, contacts, Toast.LENGTH_SHORT).show();
                 handler.obtainMessage(STATE_CONTACTS_RECEIVED, contacts.length(),-1, contacts).sendToTarget();
-
             }
         });
     }
-
-    private void add() {
-        btn_addContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                ContactModel contactModel = new ContactModel(1, "Ravindu2", "+94710764814");
-
-                boolean success = databaseHelper.record_contact(contactModel);
-
-                Toast.makeText(MainActivity.this, ""+success, Toast.LENGTH_SHORT).show();
-
-            }
-        });
-    }
-
 
     /*
     MESSAGE FORMAT
     -------
     message
     -------
-    D,HHMMSS.SSS,TTTT.TTTT,GGGGG.GGGG
+    D,HHMMSS.SSS,TTTT.TTTT,GGGGG.GGGG, VVV.VV
     -------
     content
     -------
@@ -209,30 +210,48 @@ public class MainActivity extends AppCompatActivity {
 
                     String strTime = dataArray[1].substring(0,2)+"."+dataArray[1].substring(2,4);
 
-                    String version = "2.0";
+//                    String version = "2.0";
 
-//                    if (dataArray[0].equals("1")){
-//                        SmsManager smsManagerSend = SmsManager.getDefault();
-//                        String strMessage = version+"ACCIDENT DETECTED\n@"+strTime+"\n"+"view the location on google maps:\nhttps://www.google.com/maps/search/?api=1&query="+dataArray[2]+","+dataArray[3];
-//                        System.out.println(strMessage);         // testing
-//                        for (String contact: relativeContacts) {
-//                            smsManagerSend.sendTextMessage(contact, null, strMessage, null, null);
-//                        }
-//                    }
+                    if (dataArray[0].equals("1")){
+                        SmsManager smsManagerSend = SmsManager.getDefault();
+                        String strMessage = "ACCIDENT DETECTED\n@"+strTime+"\n"+"view the location on google maps:\nhttps://www.google.com/maps/search/?api=1&query="+dataArray[2]+","+dataArray[3];
+                        System.out.println(strMessage);         // testing
+
+                        List<String> allContacts = databaseHelper.getAllContacts();
+
+                        for (String contact: allContacts) {
+                            smsManagerSend.sendTextMessage(contact, null, strMessage, null, null);
+                        }
+                    }
 
                     //=====================================================
 
-
                     break;
+
+                case STATE_CONTACTS_RECEIVED:
+                    txt_contacts.setText((CharSequence) msg.obj);
             }
-
-
-
             return false;
         }
     }){
     };
 
+
+    private void makeToast(String msg){
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == REQUEST_ENABLE_BIT) {
+            if (resultCode == RESULT_OK) {
+                makeToast("Bluetooth enabled");
+            } else {
+                makeToast("Couldn't turn on Bluetooth");
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @SuppressLint("MissingPermission")
     private void connect() {
@@ -240,6 +259,19 @@ public class MainActivity extends AppCompatActivity {
         btn_connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if (!bluetoothAdapter.isEnabled()) {
+                    makeToast("Enabling bluetooth");
+                    Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(intent, REQUEST_ENABLE_BIT);
+                    try {
+                        sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    makeToast("Bluetooth already on");
+                }
 
                 hc05 = bluetoothAdapter.getRemoteDevice("00:22:01:00:14:80");
 
