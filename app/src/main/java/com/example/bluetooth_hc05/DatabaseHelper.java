@@ -91,6 +91,30 @@ public class DatabaseHelper extends SQLiteOpenHelper implements Serializable {
         //db.close();
         return allContacts;
     }
+    public List<ContactModel> getAllContactModels(){
+
+        List<ContactModel> allContacts = new ArrayList<>();
+
+        String getContactQuery = "SELECT * FROM " + EMERGENCY_CONTACTS;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(getContactQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Integer ID = cursor.getInt(0);
+                String name = cursor.getString(1);
+                String mobile = cursor.getString(2);
+                allContacts.add(new ContactModel(ID, name, mobile));
+            } while (cursor.moveToNext());
+        } else {
+        }
+
+        cursor.close();
+        //db.close();
+        return allContacts;
+    }
 
     public boolean recordLocation(LocationModel locationModel){
 

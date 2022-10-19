@@ -162,26 +162,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    private void get_contacts() {
-//        btn_getContact.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                List<String> allContacts = databaseHelper.getAllContacts();
-//
-//                String contacts = "Contacts: ";
-//                for( String contact : allContacts){
-//                    System.out.println(contact);
-//                    contacts=contacts.concat(contact);
-//                    contacts=contacts.concat(", ");
-//                }
-//
-//                Toast.makeText(MainActivity.this, contacts, Toast.LENGTH_SHORT).show();
-//                handler.obtainMessage(STATE_CONTACTS_RECEIVED, contacts.length(),-1, contacts).sendToTarget();
-//            }
-//        });
-//    }
-
     /*
     MESSAGE FORMAT
     -------

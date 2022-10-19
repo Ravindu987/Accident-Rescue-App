@@ -28,4 +28,112 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:layout_constraintVertical_bias="0.936" />
+
+    <TableLayout
+        android:layout_width="351dp"
+        android:layout_height="357dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.374"
+        android:id="@+id/dataview_layout">
+
+        <TableRow
+            android:id="@+id/dataview_header"
+            android:layout_width="match_parent"
+            android:layout_margin="10dp"
+            android:layout_height="100dp">
+
+            <TextView
+                android:id="@+id/dataview_header_name"
+                android:layout_width="128dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Name"
+
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/dataview_header_phone"
+                android:layout_width="228dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Mobile Number"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textSize="20dp" />
+        </TableRow>
+
+<!--        <TableRow-->
+<!--            android:id="@+id/dataview_row_1"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:layout_height="match_parent">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/dataview_name_1"-->
+<!--                android:layout_width="128dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                 />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/dataview_phone_1"-->
+<!--                android:layout_width="228dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                 />-->
+<!--        </TableRow>-->
+
+<!--        <TableRow-->
+<!--            android:id="@+id/dataview_row_2"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:layout_height="match_parent">-->
+<!--            <TextView-->
+<!--                android:id="@+id/dataview_name_2"-->
+<!--                android:layout_width="128dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                 />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/dataview_phone_2"-->
+<!--                android:layout_width="228dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                 />-->
+<!--        </TableRow>-->
+<!--        <TableRow-->
+<!--            android:id="@+id/dataview_row_3"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:layout_height="match_parent">-->
+<!--            <TextView-->
+<!--                android:id="@+id/dataview_name_3"-->
+<!--                android:layout_width="128dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/dataview_phone_3"-->
+<!--                android:layout_width="228dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                 />-->
+<!--        </TableRow>-->
+<!--        <TableRow-->
+<!--            android:id="@+id/dataview_row_4"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:layout_height="match_parent">-->
+<!--            <TextView-->
+<!--                android:id="@+id/dataview_name_4"-->
+<!--                android:layout_width="128dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                 />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/dataview_phone_4"-->
+<!--                android:layout_width="228dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                 />-->
+<!--        </TableRow>-->
+    </TableLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
