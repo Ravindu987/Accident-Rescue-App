@@ -23,13 +23,11 @@ public class HelpPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 openActivityConnect();
-
             }
         });
     }
 
     private void openActivityConnect(){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        finish();
     }
 }

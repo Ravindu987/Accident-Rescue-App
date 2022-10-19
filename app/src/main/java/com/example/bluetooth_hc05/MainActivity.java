@@ -31,7 +31,7 @@ import android.widget.Toast;
 
 import com.example.bluetooth_hc05.layouts.DataViewingWindow;
 import com.example.bluetooth_hc05.layouts.HelpPage;
-import com.example.bluetooth_hc05.layouts.RelativesWindow;
+import com.example.bluetooth_hc05.layouts.AddEmergencyContact;
 import com.example.bluetooth_hc05.models.AuthorityModel;
 import com.example.bluetooth_hc05.models.LocationModel;
 import com.google.android.material.navigation.NavigationView;
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
                     case R.id.nav_relatives:
-                        openActivity(RelativesWindow.class);
+                        openActivity(AddEmergencyContact.class);
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
                     case R.id.nav_help:
@@ -128,9 +128,10 @@ public class MainActivity extends AppCompatActivity {
         databaseHelper.recordAuthority(colombo);
         databaseHelper.recordAuthority(kandy);
 
-        Intent intent = new Intent(this, RelativesWindow.class);
+        Intent intent = new Intent(this, AddEmergencyContact.class);
         intent.putExtra("DatabaseHelper", databaseHelper);
 
+        System.out.println("Working");
         connect();
         //get_contacts();
     }
@@ -342,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
         btn_connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                System.out.println("Here");
                 if (!bluetoothAdapter.isEnabled()) {
                     makeToast("Enabling bluetooth");
                     Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -362,6 +363,7 @@ public class MainActivity extends AppCompatActivity {
 
                 try {
                     bluetoothSocket = hc05.createRfcommSocketToServiceRecord(mUUID);
+                    System.out.println("Socket Created");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -375,6 +377,7 @@ public class MainActivity extends AppCompatActivity {
                 if(bluetoothSocket.isConnected()==true){
                     Message message = Message.obtain();
                     message.what=STATE_CONNECTED;
+                    System.out.println("Socket connected");
                     handler.sendMessage(message);
                 }
                 else{

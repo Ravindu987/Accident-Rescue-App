@@ -12,10 +12,10 @@ import com.example.bluetooth_hc05.DatabaseHelper;
 import com.example.bluetooth_hc05.R;
 import com.example.bluetooth_hc05.models.ContactModel;
 
-public class RelativesWindow extends AppCompatActivity {
+public class AddEmergencyContact extends AppCompatActivity {
 
     EditText etName, etPhone;
-    Button btn_add;
+    Button btn_add, btn_back;
     DatabaseHelper databaseHelper;
     String name, phone;
 
@@ -27,8 +27,16 @@ public class RelativesWindow extends AppCompatActivity {
         etName = findViewById(R.id.editTextTextContactName);
         etPhone = findViewById(R.id.editTextContact);
         btn_add = findViewById(R.id.btn_addContact);
+        btn_back = findViewById(R.id.btn_add_meregncy_back);
 
-        databaseHelper = new DatabaseHelper(RelativesWindow.this);
+        databaseHelper = new DatabaseHelper(AddEmergencyContact.this);
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         add();
     }
@@ -48,10 +56,10 @@ public class RelativesWindow extends AppCompatActivity {
                 if(success){
                     etName.getText().clear();
                     etPhone.getText().clear();
-                    Toast.makeText(RelativesWindow.this, "Successfully added", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddEmergencyContact.this, "Successfully added", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    Toast.makeText(RelativesWindow.this, "Invalid details", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddEmergencyContact.this, "Invalid details", Toast.LENGTH_SHORT).show();
                 }
             }
         });

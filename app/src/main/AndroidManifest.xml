@@ -18,7 +18,7 @@
             android:name=".layouts.HelpPage"
             android:exported="false" />
         <activity
-            android:name=".layouts.RelativesWindow"
+            android:name=".layouts.AddEmergencyContact"
             android:exported="false" />
         <activity
             android:name=".layouts.DataViewingWindow"
